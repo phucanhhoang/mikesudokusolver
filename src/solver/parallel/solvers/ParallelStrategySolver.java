@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package solver.parallel.solvers;
 
 import gui.Constants;
@@ -12,16 +15,35 @@ import solver.parallel.solvers.strategies.SingleValueForCellStrategy;
 import solver.parallel.solvers.strategies.Strategy;
 import solver.parallel.solvers.strategies.semaphore.CountingSemaphore;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ParallelStrategySolver.
+ */
 public class ParallelStrategySolver {
 
+	/** The board. */
 	private SudokuBoard board;
+	
 	/** The possible values. */
 	private boolean possibleValues[][][];
 
+	/**
+	 * Instantiates a new parallel strategy solver.
+	 * 
+	 * @param board2 the board2
+	 */
 	public ParallelStrategySolver(SudokuBoard board2) {
 		board = board2;
 	}
 
+	/**
+	 * Gets an array of possible values for the cell entered. Returns zero after all possibilities have been saved.
+	 * 
+	 * @param row the row
+	 * @param col the col
+	 * 
+	 * @return the possible values cell
+	 */
 	public int[] getPossibleValuesCell(int row, int col) {
 		int values[] = new int[Constants.BOARD_SIZE];
 		int counter = 0;
@@ -36,6 +58,11 @@ public class ParallelStrategySolver {
 		return values;
 	}
 
+	/**
+	 * Gets the value of least possible values cell.
+	 * 
+	 * @return the value of least possible values cell
+	 */
 	public int getValueOfLeastPossibleValuesCell() {
 		int minValues = Constants.BOARD_SIZE + 1;
 		int cellValues;
@@ -69,7 +96,7 @@ public class ParallelStrategySolver {
 	}
 
 	/**
-	 * 
+	 * Initialize possible values.
 	 */
 	public void initializePossibleValues() {
 		possibleValues = new boolean[Constants.BOARD_SIZE][Constants.BOARD_SIZE][Constants.BOARD_SIZE];
@@ -84,6 +111,12 @@ public class ParallelStrategySolver {
 		}
 	}
 
+	/**
+	 * Loop through strategies.
+	 * 
+	 * @param counter the counter
+	 * @param threadPool the thread pool
+	 */
 	private void loopThroughStrategies(CountingSemaphore counter,
 			ThreadPoolExecutor threadPool) {
 		// ----------------------------
@@ -104,8 +137,8 @@ public class ParallelStrategySolver {
 	/**
 	 * Sets the up possible values.
 	 * 
-	 * @param threadPool
-	 *            the new up possible values
+	 * @param threadPool the new up possible values
+	 * @param counter the counter
 	 */
 	public void setupPossibleValues(CountingSemaphore counter,
 			ThreadPoolExecutor threadPool) {
@@ -124,6 +157,12 @@ public class ParallelStrategySolver {
 		counter.waitForThreadsToFinish();
 	}
 
+	/**
+	 * Solve.
+	 * 
+	 * @param counter the counter
+	 * @param threadPool the thread pool
+	 */
 	public void solve(CountingSemaphore counter, ThreadPoolExecutor threadPool) {
 
 		if (counter == null) {
@@ -136,16 +175,34 @@ public class ParallelStrategySolver {
 		loopThroughStrategies(counter, threadPool);
 	}
 
+	/**
+	 * Solve.
+	 * 
+	 * @param threadPool the thread pool
+	 */
 	public void solve(ThreadPoolExecutor threadPool) {
 		solve(null, threadPool);
 	}
 
+	/**
+	 * Start col thread.
+	 * 
+	 * @param counter the counter
+	 * @param col the col
+	 * @param threadPool the thread pool
+	 */
 	private void startColThread(CountingSemaphore counter, int col,
 			ThreadPoolExecutor threadPool) {
 		startThread(new OnePossibilityStrategy(counter, col, board,
 				possibleValues, false), threadPool);
 	}
 
+	/**
+	 * Start row and column and square threads.
+	 * 
+	 * @param counter the counter
+	 * @param threadPool the thread pool
+	 */
 	private void startRowAndColumnAndSquareThreads(CountingSemaphore counter,
 			ThreadPoolExecutor threadPool) {
 		for (int m = 0; m < Constants.BOARD_SIZE; m++) {
@@ -158,12 +215,25 @@ public class ParallelStrategySolver {
 
 	}
 
+	/**
+	 * Start row thread.
+	 * 
+	 * @param counter the counter
+	 * @param row the row
+	 * @param threadPool the thread pool
+	 */
 	private void startRowThread(CountingSemaphore counter, int row,
 			ThreadPoolExecutor threadPool) {
 		startThread(new OnePossibilityStrategy(counter, row, board,
 				possibleValues, true), threadPool);
 	}
 
+	/**
+	 * Start single value for cell threads.
+	 * 
+	 * @param counter the counter
+	 * @param threadPool the thread pool
+	 */
 	private void startSingleValueForCellThreads(CountingSemaphore counter,
 			ThreadPoolExecutor threadPool) {
 		// Create the thread pool.
@@ -189,12 +259,25 @@ public class ParallelStrategySolver {
 		// counter);
 	}
 
+	/**
+	 * Start square thread.
+	 * 
+	 * @param counter the counter
+	 * @param square the square
+	 * @param threadPool the thread pool
+	 */
 	private void startSquareThread(CountingSemaphore counter, int square,
 			ThreadPoolExecutor threadPool) {
 		startThread(new OnePossibilitySquareStrategy(counter, square, board,
 				possibleValues), threadPool);
 	}
 
+	/**
+	 * Start thread.
+	 * 
+	 * @param temp the temp
+	 * @param threadPool the thread pool
+	 */
 	private void startThread(Strategy temp, ThreadPoolExecutor threadPool) {
 		if (threadPool != null) {
 			threadPool.execute(temp);
