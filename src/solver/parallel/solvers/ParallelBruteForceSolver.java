@@ -121,7 +121,7 @@ public class ParallelBruteForceSolver implements Runnable{
 		int tempStartRow;
 		int tempStartCol;
 		for (int j:solver.getPossibleValuesCell(startRow, startCol)) {
-			System.out.println("Setting (" + startRow + " , " + startCol + ") to " + j);
+			//System.out.println("Setting (" + startRow + " , " + startCol + ") to " + j);
 			if (j == Constants.EMPTY_CELL || boardSolved) {
 				break;
 			}
@@ -150,8 +150,8 @@ public class ParallelBruteForceSolver implements Runnable{
 		if (counter.getValue() < (Constants.NUM_THREADS)) {
 			ParallelBruteForceSolver bruteSolver;
 			bruteSolver = new ParallelBruteForceSolver(tempBoard, threadPool, counter, startRow, startCol);
-			new Thread(bruteSolver).start();
-			//threadPool.execute(bruteSolver);
+			//new Thread(bruteSolver).start();
+			threadPool.execute(bruteSolver);
 			//bruteSolver.run();
 			return true;
 		}
@@ -164,5 +164,10 @@ public class ParallelBruteForceSolver implements Runnable{
 			return solvedBoard;
 		else
 			return null;
+	}
+
+	public synchronized void clearSolved() {
+		boardSolved = false;
+		solvedBoard = null;
 	}
 }

@@ -104,7 +104,7 @@ public abstract class SudokuPuzzle {
 	private void initializeBoard() throws InterruptedException {
 		board = new SudokuBoard(Constants.BOARD_SIZE);
 		
-		if (solveRandom()) {
+		if (solveBackwards()) {
 			System.out.println("board generated");
 		}
 	}

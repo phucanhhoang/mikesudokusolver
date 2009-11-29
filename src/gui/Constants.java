@@ -8,11 +8,11 @@ public class Constants
     // Stores size of the board, but must be a square number for sudoku puzzle.
     // Is also used as range of possible values that can be put in cells.
     //
-    public final static int BOARD_SIZE = 9;
+    public final static int BOARD_SIZE = 16;
     
-    public final static int GEN_ATTEMPTS =5;
+    public final static int GEN_ATTEMPTS =2;
     
-    public final static int NUM_THREADS = 1;
+    public final static int NUM_THREADS = 9;
     
     // Size of the frame, the total frame size will be 9*CELL_SIZE by 9*CELL_SIZE plus BUTTON_SIZE.
     //
