@@ -55,7 +55,7 @@ public class ParallelBruteForceSolver implements Runnable{
 		}
 		
 		startBruteForceSolver(threadPool, solver);
-		counter.decrementCounter();
+		//counter.decrementCounter();
 	}
 	
 
@@ -82,8 +82,9 @@ public class ParallelBruteForceSolver implements Runnable{
 		if (boardSolved) {
 			return;
 		}
+		System.out.println("BOARD SOLVED");
 		boardSolved = true;
-		solvedBoard = board2;
+		solvedBoard = new SudokuBoard(Helper.copyCells(board2.getBoard()));
 	}
 
 	/**
@@ -92,19 +93,31 @@ public class ParallelBruteForceSolver implements Runnable{
 	 */
 	private void startBruteForceSolver(ThreadPoolExecutor threadPool,
 			ParallelStrategySolver solver) {
-		
+		SudokuBoard tempBoard;
+		SudokuBoard boardSave;
+		int tempStartRow;
+		int tempStartCol;
 		for (int j:solver.getPossibleValuesCell(startRow, startCol)) {
+			System.out.println("Setting (" + startRow + " , " + startCol + ") to " + j);
 			if (j == Constants.EMPTY_CELL) {
 				break;
 			}
 			
-			SudokuBoard tempBoard = board.newChangedValue(startRow,startCol,j);
+			tempBoard = board.newChangedValue(startRow,startCol,j);
 
 			if (!startThread(tempBoard)) {
-				SudokuBoard boardSave = board;
+				boardSave = board;
 				this.board = tempBoard;
+				tempStartRow = startRow;
+				tempStartCol = startCol;
 				run();
+				if (board.isSolved())
+					setSolvedBoard(board);
 				board = boardSave;
+				startRow = tempStartRow;
+				startCol = tempStartCol;
+				boardSave = null;
+				tempBoard = null;
 			}
 		}
 	}

@@ -2,29 +2,15 @@ package solver.parallel;
 
 import gui.Constants;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import solver.SudokuBoard;
 import solver.SudokuPuzzle;
-import solver.arrayGeneration.ArrayGeneratorStrategy;
-import solver.arrayGeneration.BackwardArray;
-import solver.arrayGeneration.ForwardArray;
-import solver.arrayGeneration.RandomArray;
 import solver.parallel.solvers.ParallelBruteForceSolver;
 import solver.parallel.solvers.ParallelStrategySolver;
-import solver.parallel.solvers.strategies.FindPossibleValuesStrategy;
-import solver.parallel.solvers.strategies.OnePossibilitySquareStrategy;
-import solver.parallel.solvers.strategies.OnePossibilityStrategy;
-import solver.parallel.solvers.strategies.SingleValueForCellStrategy;
-import solver.parallel.solvers.strategies.Strategy;
 import solver.parallel.solvers.strategies.semaphore.CountingSemaphore;
-import solver.recurssive.RecurssiveSudokuPuzzle;
 
 // TODO: Auto-generated Javadoc
 /**
