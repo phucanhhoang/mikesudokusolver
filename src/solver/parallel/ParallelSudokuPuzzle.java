@@ -68,8 +68,8 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors
 				.newFixedThreadPool(Constants.NUM_THREADS);
 
-		ParallelStrategySolver solver = new ParallelStrategySolver(board);
-		solver.solve(threadPool);
+		/*ParallelStrategySolver solver = new ParallelStrategySolver(board);
+		solver.solve(threadPool);*/
 
 		if (board.isSolved())
 		{
