@@ -12,7 +12,7 @@ public class Constants
     
     public final static int GEN_ATTEMPTS =5;
     
-    public final static int NUM_THREADS = 5;
+    public final static int NUM_THREADS = 1;
     
     // Size of the frame, the total frame size will be 9*CELL_SIZE by 9*CELL_SIZE plus BUTTON_SIZE.
     //
