@@ -48,7 +48,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 	 */
 	private void shutdown(ThreadPoolExecutor threadPool)
 			throws InterruptedException {
-		System.out.println("Shutting down threadPool");
+		//System.out.println("Shutting down threadPool");
 		threadPool.shutdown();
 		threadPool.awaitTermination(30, TimeUnit.SECONDS);
 		threadPool.shutdownNow();
@@ -86,6 +86,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 	private boolean startBruteForceSolver(ThreadPoolExecutor threadPool) throws InterruptedException {
 		CountingSemaphore counter = new CountingSemaphore();
 		ParallelBruteForceSolver brute = new ParallelBruteForceSolver(board, threadPool, counter, 0, 0);
+		brute.clearSolved();
 		brute.run();
 		
 		//System.out.println("waiting for threads");
@@ -94,7 +95,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		//brute.run();
 		shutdown(threadPool);
 		
-		System.out.println("FINAL COUNTER VALUE: " + counter.getValue());
+		//System.out.println("FINAL COUNTER VALUE: " + counter.getValue());
 		
 		SudokuBoard tempBoard = brute.getSolvedBoard();
 		if (tempBoard != null) {
