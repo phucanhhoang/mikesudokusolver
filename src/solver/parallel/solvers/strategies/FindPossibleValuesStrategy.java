@@ -7,11 +7,11 @@ import solver.parallel.solvers.strategies.semaphore.CountingSemaphore;
 /**
  * The Class FindPossibleValuesStrategy.
  */
-public class FindPossibleValuesStrategy extends Strategy{
-	
+public class FindPossibleValuesStrategy extends Strategy {
+
 	/** The row. */
 	int row;
-	
+
 	/** The col. */
 	int col;
 
@@ -25,24 +25,30 @@ public class FindPossibleValuesStrategy extends Strategy{
 	/**
 	 * Instantiates a new find possible values strategy.
 	 * 
-	 * @param row the row
-	 * @param col the col
-	 * @param board the board
-	 * @param possibleValues the possible values
+	 * @param row
+	 *            the row
+	 * @param col
+	 *            the col
+	 * @param board
+	 *            the board
+	 * @param possibleValues
+	 *            the possible values
 	 */
-	public FindPossibleValuesStrategy(CountingSemaphore instanceCounter, int row, int col, SudokuBoard board,
-			boolean[][][] possibleValues) {
+	public FindPossibleValuesStrategy(CountingSemaphore instanceCounter,
+			int row, int col, SudokuBoard board, boolean[][][] possibleValues) {
 		super(instanceCounter, board, possibleValues);
 		this.row = row;
 		this.col = col;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see solver.parallel.strategies.Strategy#run()
 	 */
 	@Override
 	public void runStrategy() {
-		updatePossibleValues(row, col, readBoard(row,col) - 1);
+		updatePossibleValues(row, col, readBoard(row, col) - 1);
 	}
 
 }

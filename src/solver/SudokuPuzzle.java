@@ -2,10 +2,7 @@ package solver;
 
 import gui.Constants;
 
-import java.util.Arrays;
 import java.util.Random;
-
-import solver.parallel.solvers.strategies.Strategy;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,7 +19,8 @@ public abstract class SudokuPuzzle {
 	/**
 	 * Instantiates a new sudoku handler.
 	 * 
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	public SudokuPuzzle() throws InterruptedException {
 		generateBoard();
@@ -32,13 +30,14 @@ public abstract class SudokuPuzzle {
 	/**
 	 * Create a new sudoku solver instance.
 	 * 
-	 * @param board the board
+	 * @param board
+	 *            the board
 	 */
 	public SudokuPuzzle(int[][] board) {
 		this.board = new SudokuBoard(board);
 		originalBoard = Helper.copyCells(getBoard());
 	}
-	
+
 	public SudokuPuzzle(SudokuBoard board) {
 		this.board = board;
 		originalBoard = Helper.copyCells(getBoard());
@@ -47,7 +46,8 @@ public abstract class SudokuPuzzle {
 	/**
 	 * Deletes this instance of the board.
 	 * 
-	 * @throws Throwable the throwable
+	 * @throws Throwable
+	 *             the throwable
 	 */
 	public void deleteInstance() throws Throwable {
 		board = null;
@@ -58,55 +58,13 @@ public abstract class SudokuPuzzle {
 	/**
 	 * Generate board by initializing a random board and solving it.
 	 * 
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	public void generateBoard() throws InterruptedException {
 		initializeBoard();
 
 		removeSquares(Constants.GEN_ATTEMPTS);
-	}
-
-	/**
-	 * @param gen
-	 * @param missAttempts
-	 * @return
-	 * @throws InterruptedException
-	 */
-	private void removeSquares(int missAttempts)
-			throws InterruptedException {
-		int lastX;
-		int lastY;
-		int lastVal;
-		Random gen = new Random();
-		// Randomly remove squares until non-unique solution is found.
-		//
-		do {
-			lastX = gen.nextInt(Constants.BOARD_SIZE);
-			lastY = gen.nextInt(Constants.BOARD_SIZE);
-			lastVal = board.getValueAt(lastX,lastY);
-
-			board.setValueAt(lastX,lastY,Constants.EMPTY_CELL);
-
-			if (!uniqueSolution()) {
-				missAttempts--;
-				// Undo last remove.
-				//
-				board.setValueAt(lastX,lastY,lastVal);
-			}
-		} while (missAttempts > 0);
-	}
-
-	/**
-	 * Initializes a solved sudoku board that is random.
-	 * 
-	 * @throws InterruptedException 
-	 */
-	private void initializeBoard() throws InterruptedException {
-		board = new SudokuBoard(Constants.BOARD_SIZE);
-		
-		if (solveBackwards()) {
-			System.out.println("board generated");
-		}
 	}
 
 	/**
@@ -128,20 +86,74 @@ public abstract class SudokuPuzzle {
 	}
 
 	/**
+	 * Initializes a solved sudoku board that is random.
+	 * 
+	 * @throws InterruptedException
+	 */
+	private void initializeBoard() throws InterruptedException {
+		board = new SudokuBoard(Constants.BOARD_SIZE);
+
+		if (solveBackwards()) {
+			System.out.println("board generated");
+		}
+	}
+
+	public boolean isLegalMove(int lastClickedi, int lastClickedj, int num) {
+		return board.legalMove(lastClickedi, lastClickedj, num);
+	}
+
+	/**
+	 * @param gen
+	 * @param missAttempts
+	 * @return
+	 * @throws InterruptedException
+	 */
+	private void removeSquares(int missAttempts) throws InterruptedException {
+		int lastX;
+		int lastY;
+		int lastVal;
+		Random gen = new Random();
+		// Randomly remove squares until non-unique solution is found.
+		//
+		do {
+			lastX = gen.nextInt(Constants.BOARD_SIZE);
+			lastY = gen.nextInt(Constants.BOARD_SIZE);
+			lastVal = board.getValueAt(lastX, lastY);
+
+			board.setValueAt(lastX, lastY, Constants.EMPTY_CELL);
+
+			if (!uniqueSolution()) {
+				missAttempts--;
+				// Undo last remove.
+				//
+				board.setValueAt(lastX, lastY, lastVal);
+			}
+		} while (missAttempts > 0);
+	}
+
+	public void resetBoard() {
+		board = new SudokuBoard(originalBoard);
+	}
+
+	/**
 	 * Sets the board spot.
 	 * 
-	 * @param i the i
-	 * @param j the j
-	 * @param value the value
+	 * @param i
+	 *            the i
+	 * @param j
+	 *            the j
+	 * @param value
+	 *            the value
 	 */
 	public void setBoardSpot(int i, int j, int value) {
-		board.updateBoard(i,j,value);
+		board.updateBoard(i, j, value);
 	}
 
 	/**
 	 * Sets the original board.
 	 * 
-	 * @param originalBoard the new original board
+	 * @param originalBoard
+	 *            the new original board
 	 */
 	public void setOriginalBoard(int[][] originalBoard) {
 		this.originalBoard = originalBoard;
@@ -152,7 +164,8 @@ public abstract class SudokuPuzzle {
 	 * 
 	 * @return true, if successful
 	 * 
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	public abstract boolean solve() throws InterruptedException;
 
@@ -162,7 +175,8 @@ public abstract class SudokuPuzzle {
 	 * 
 	 * @return true, if solve backwards
 	 * 
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	public abstract boolean solveBackwards() throws InterruptedException;
 
@@ -171,7 +185,8 @@ public abstract class SudokuPuzzle {
 	 * 
 	 * @return true, if solve random
 	 * 
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	public abstract boolean solveRandom() throws InterruptedException;
 
@@ -180,40 +195,33 @@ public abstract class SudokuPuzzle {
 	 * 
 	 * @return true, if successful
 	 * 
-	 * @throws InterruptedException the interrupted exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	public boolean uniqueSolution() throws InterruptedException {
 		SudokuBoard theBoard = board;
 		// In order to solve the sudoku override the board in this class with a
 		// temp value.
 		//
-		SudokuBoard board1 = new SudokuBoard(Helper.copyCells(theBoard.getBoard()));
+		SudokuBoard board1 = new SudokuBoard(Helper.copyCells(theBoard
+				.getBoard()));
 		board = board1;
 		boolean forwardSolved = solve();
 
-		SudokuBoard board2 = new SudokuBoard(Helper.copyCells(theBoard.getBoard()));
+		SudokuBoard board2 = new SudokuBoard(Helper.copyCells(theBoard
+				.getBoard()));
 		board = board2;
 		boolean backwardSolved = solveBackwards();
-		
+
 		board = theBoard;
-		
+
 		// In order for the board to have a unique solution it must be solvable
 		// in opposite ways to have one solution.
 		//
 		if (forwardSolved && backwardSolved) {
 			return SudokuBoard.equalBoards(board1, board2);
-        }
-        else
-        {
-            return false;
-        }
-	}
-
-	public boolean isLegalMove(int lastClickedi, int lastClickedj, int num) {
-		return board.legalMove(lastClickedi,lastClickedj,num);
-	}
-
-	public void resetBoard() {
-		board = new SudokuBoard(originalBoard);
+		} else {
+			return false;
+		}
 	}
 }

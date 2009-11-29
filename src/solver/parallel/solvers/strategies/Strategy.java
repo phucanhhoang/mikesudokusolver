@@ -1,8 +1,8 @@
 package solver.parallel.solvers.strategies;
 
+import gui.Constants;
 import solver.SudokuBoard;
 import solver.parallel.solvers.strategies.semaphore.CountingSemaphore;
-import gui.Constants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -10,10 +10,15 @@ import gui.Constants;
  */
 public abstract class Strategy implements Runnable {
 
-	public int getCounterValue() {
-		return instanceCounter.getValue();
+	/** The changed. */
+	protected static boolean changed = false;
+
+	public static int getOffset(int Val) {
+		return Math.round(Val
+				/ (int) Math.round(Math.sqrt(Constants.BOARD_SIZE))
+				* Math.round(Math.sqrt(Constants.BOARD_SIZE)));
 	}
-	
+
 	/**
 	 * See changes.
 	 * 
@@ -34,51 +39,57 @@ public abstract class Strategy implements Runnable {
 	/** The counter. */
 	protected CountingSemaphore instanceCounter;
 
-	/** The changed. */
-	protected static boolean changed = false;
-
 	public Strategy() {
 		this(null);
 	}
-	
+
 	/**
 	 * Instantiates a new strategy.
 	 */
 	public Strategy(CountingSemaphore instanceCounter) {
 		super();
-		if (instanceCounter == null)
+		if (instanceCounter == null) {
 			this.instanceCounter = new CountingSemaphore();
-		else
+		} else {
 			this.instanceCounter = instanceCounter;
+		}
 		instanceCounter.incrementCounter();
 	}
 
 	/**
 	 * Instantiates a new strategy.
 	 * 
-	 * @param board2 the board
-	 * @param possibleValues the possible values
+	 * @param board2
+	 *            the board
+	 * @param possibleValues
+	 *            the possible values
 	 */
-	public Strategy(CountingSemaphore instanceCounter, SudokuBoard board2, boolean[][][] possibleValues) {
+	public Strategy(CountingSemaphore instanceCounter, SudokuBoard board2,
+			boolean[][][] possibleValues) {
 		this(instanceCounter);
 		setup(board2, possibleValues);
 	}
-	
-	protected int readBoard(int row, int col) {
-		return board.getValueAt(row,col);
+
+	public int getCounterValue() {
+		return instanceCounter.getValue();
 	}
-	
-	/* (non-Javadoc)
+
+	protected int readBoard(int row, int col) {
+		return board.getValueAt(row, col);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run()
-	{
+	public void run() {
 		runStrategy();
 		instanceCounter.decrementCounter();
 	}
 
 	public abstract void runStrategy();
-	
+
 	/**
 	 * Sets the changed.
 	 */
@@ -91,30 +102,43 @@ public abstract class Strategy implements Runnable {
 	/**
 	 * Setup.
 	 * 
-	 * @param board2 the board
-	 * @param possibleValues the possible values
+	 * @param board2
+	 *            the board
+	 * @param possibleValues
+	 *            the possible values
 	 */
 	public void setup(SudokuBoard board2, boolean[][][] possibleValues) {
-		this.board = board2;
+		board = board2;
 		this.possibleValues = possibleValues;
 	}
 
 	/**
 	 * Update board.
 	 * 
-	 * @param row the row
-	 * @param col the col
-	 * @param val the val
+	 * @param row
+	 *            the row
+	 * @param col
+	 *            the col
+	 * @param val
+	 *            the val
 	 */
 	private synchronized void updateBoard(int row, int col, int val) {
 		board.setValueAt(row, col, val);
 	}
 
+	private void updateCellPossibleValues(int row, int col) {
+		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+			updatePossibleValue(row, col, i);
+		}
+	}
+
 	/**
 	 * Update col possible values.
 	 * 
-	 * @param col the col
-	 * @param val the val
+	 * @param col
+	 *            the col
+	 * @param val
+	 *            the val
 	 */
 	private void updateColPossibleValues(int col, int val) {
 		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
@@ -127,9 +151,12 @@ public abstract class Strategy implements Runnable {
 	/**
 	 * Update possible value.
 	 * 
-	 * @param row the row
-	 * @param col the col
-	 * @param val the val
+	 * @param row
+	 *            the row
+	 * @param col
+	 *            the col
+	 * @param val
+	 *            the val
 	 */
 	private synchronized void updatePossibleValue(int row, int col, int val) {
 		possibleValues[row][col][val] = false;
@@ -138,9 +165,12 @@ public abstract class Strategy implements Runnable {
 	/**
 	 * Update possible values.
 	 * 
-	 * @param row the row
-	 * @param col the col
-	 * @param val the val
+	 * @param row
+	 *            the row
+	 * @param col
+	 *            the col
+	 * @param val
+	 *            the val
 	 */
 	protected void updatePossibleValues(int row, int col, int val) {
 		updateCellPossibleValues(row, col);
@@ -149,17 +179,13 @@ public abstract class Strategy implements Runnable {
 		updateSquarePossibleValues(row, col, val);
 	}
 
-	private void updateCellPossibleValues(int row, int col) {
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-			updatePossibleValue(row, col, i);
-		}
-	}
-
 	/**
 	 * Update row possible values.
 	 * 
-	 * @param row the row
-	 * @param val the val
+	 * @param row
+	 *            the row
+	 * @param val
+	 *            the val
 	 */
 	private void updateRowPossibleValues(int row, int val) {
 		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
@@ -172,12 +198,15 @@ public abstract class Strategy implements Runnable {
 	/**
 	 * Update square possible values.
 	 * 
-	 * @param row the row
-	 * @param col the col
-	 * @param val the val
+	 * @param row
+	 *            the row
+	 * @param col
+	 *            the col
+	 * @param val
+	 *            the val
 	 */
 	private void updateSquarePossibleValues(int row, int col, int val) {
-		
+
 		// Set beginning of square this cell is in.
 		//
 		int rowOffset = getOffset(row);
@@ -194,20 +223,18 @@ public abstract class Strategy implements Runnable {
 		}
 	}
 
-	public static int getOffset(int Val) {
-		return Math.round(Val / (int) Math.round(Math.sqrt(Constants.BOARD_SIZE))
-				* Math.round(Math.sqrt(Constants.BOARD_SIZE)));
-	}
-
 	/**
 	 * Update value.
 	 * 
-	 * @param row the row
-	 * @param col the col
-	 * @param val the val
+	 * @param row
+	 *            the row
+	 * @param col
+	 *            the col
+	 * @param val
+	 *            the val
 	 */
 	public void updateValue(int row, int col, int val) {
-		//System.out.println("UPDATING VALUE");
+		// System.out.println("UPDATING VALUE");
 
 		updatePossibleValues(row, col, val - 1);
 		updateBoard(row, col, val);

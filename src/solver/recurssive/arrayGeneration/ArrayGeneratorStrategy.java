@@ -1,13 +1,12 @@
 /**
  * 
  */
-package solver.arrayGeneration;
+package solver.recurssive.arrayGeneration;
 
 /**
  * @author Administrator
- *
+ * 
  */
-public interface ArrayGeneratorStrategy 
-{
+public interface ArrayGeneratorStrategy {
 	public int[] generateArray(int size);
 }
