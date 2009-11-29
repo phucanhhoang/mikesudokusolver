@@ -39,16 +39,19 @@ public class ParallelBruteForceSolver implements Runnable{
 	@Override
 	public void run() {
 		boolean firstLayerOfRun = false;
+		
 		if (notBeenInRun) {
 			firstLayerOfRun = true;
 			notBeenInRun = false;
 		}
 		
 		if (ParallelBruteForceSolver.boardSolved) {
+			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 			return;
 		}
 		else if (board.isSolved()) {
 			setSolvedBoard(board);
+			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 			return;
 		}
 		
@@ -57,12 +60,21 @@ public class ParallelBruteForceSolver implements Runnable{
 		
 		if (board.isSolved() || boardSolved) {
 			setSolvedBoard(board);
+			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 			return;
 		} else if (!findNextEmptyCell()) {
+			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 			return;
 		}
 		
 		startBruteForceSolver(threadPool, solver);
+		decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
+	}
+
+	/**
+	 * @param firstLayerOfRun
+	 */
+	private void decrementCounterIfFirstLayerOfRun(boolean firstLayerOfRun) {
 		if (firstLayerOfRun) {
 			counter.decrementCounter();
 			firstLayerOfRun = false;
@@ -109,7 +121,7 @@ public class ParallelBruteForceSolver implements Runnable{
 		int tempStartRow;
 		int tempStartCol;
 		for (int j:solver.getPossibleValuesCell(startRow, startCol)) {
-			//System.out.println("Setting (" + startRow + " , " + startCol + ") to " + j);
+			System.out.println("Setting (" + startRow + " , " + startCol + ") to " + j);
 			if (j == Constants.EMPTY_CELL || boardSolved) {
 				break;
 			}
@@ -136,7 +148,6 @@ public class ParallelBruteForceSolver implements Runnable{
 	private synchronized boolean startThread(SudokuBoard tempBoard) {
 		
 		if (counter.getValue() < (Constants.NUM_THREADS)) {
-			System.out.println("Starting thread with counter: " + counter.getValue());
 			ParallelBruteForceSolver bruteSolver;
 			bruteSolver = new ParallelBruteForceSolver(tempBoard, threadPool, counter, startRow, startCol);
 			new Thread(bruteSolver).start();
