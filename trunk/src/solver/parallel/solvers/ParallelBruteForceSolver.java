@@ -19,6 +19,7 @@ public class ParallelBruteForceSolver implements Runnable{
 	private int startCol;
 	private CountingSemaphore counter;
 	ThreadPoolExecutor threadPool;
+	private boolean notBeenInRun = false;
 	
 	public ParallelBruteForceSolver() {
 		super();
@@ -32,10 +33,16 @@ public class ParallelBruteForceSolver implements Runnable{
 		this.startRow = startRow;
 		this.startCol = startCol;
 		counter.incrementCounter();
+		notBeenInRun = true;
 	}
 
 	@Override
 	public void run() {
+		boolean firstLayerOfRun = false;
+		if (notBeenInRun) {
+			firstLayerOfRun = true;
+			notBeenInRun = false;
+		}
 		
 		if (ParallelBruteForceSolver.boardSolved) {
 			return;
@@ -46,16 +53,20 @@ public class ParallelBruteForceSolver implements Runnable{
 		}
 		
 		ParallelStrategySolver solver = new ParallelStrategySolver(board);
-		solver.solve(null);
+		solver.solve(threadPool);
 		
 		if (board.isSolved() || boardSolved) {
 			setSolvedBoard(board);
+			return;
 		} else if (!findNextEmptyCell()) {
 			return;
 		}
 		
 		startBruteForceSolver(threadPool, solver);
-		//counter.decrementCounter();
+		if (firstLayerOfRun) {
+			counter.decrementCounter();
+			firstLayerOfRun = false;
+		}
 	}
 	
 
@@ -98,8 +109,8 @@ public class ParallelBruteForceSolver implements Runnable{
 		int tempStartRow;
 		int tempStartCol;
 		for (int j:solver.getPossibleValuesCell(startRow, startCol)) {
-			System.out.println("Setting (" + startRow + " , " + startCol + ") to " + j);
-			if (j == Constants.EMPTY_CELL) {
+			//System.out.println("Setting (" + startRow + " , " + startCol + ") to " + j);
+			if (j == Constants.EMPTY_CELL || boardSolved) {
 				break;
 			}
 			
@@ -125,11 +136,12 @@ public class ParallelBruteForceSolver implements Runnable{
 	private synchronized boolean startThread(SudokuBoard tempBoard) {
 		
 		if (counter.getValue() < (Constants.NUM_THREADS)) {
+			System.out.println("Starting thread with counter: " + counter.getValue());
 			ParallelBruteForceSolver bruteSolver;
 			bruteSolver = new ParallelBruteForceSolver(tempBoard, threadPool, counter, startRow, startCol);
-			//new Thread(bruteSolver).start();
+			new Thread(bruteSolver).start();
 			//threadPool.execute(bruteSolver);
-			bruteSolver.run();
+			//bruteSolver.run();
 			return true;
 		}
 		return false;

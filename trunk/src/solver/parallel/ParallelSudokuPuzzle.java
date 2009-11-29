@@ -89,7 +89,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		brute.run();
 		
 		//System.out.println("waiting for threads");
-		//counter.waitForThreadsToFinish();
+		counter.waitForThreadsToFinish();
 
 		//brute.run();
 		shutdown(threadPool);
