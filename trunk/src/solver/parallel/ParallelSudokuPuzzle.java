@@ -42,7 +42,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 	}
 
 	/**
-	 * Shutdown.
+	 * Shutdown the inputted threadpool without risking problems.
 	 * 
 	 * @param threadPool
 	 *            the thread pool
@@ -72,16 +72,18 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 	@Override
 	public boolean solve() throws InterruptedException {
 		// Create the thread pool.
-		ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors
-				.newFixedThreadPool(Constants.NUM_THREADS);
+		ThreadPoolExecutor threadPool;
 
 		/*
 		 * ParallelStrategySolver solver = new ParallelStrategySolver(board);
 		 * solver.solve(threadPool);
 		 */
-
-		if (board.isSolved()) {
-			shutdown(threadPool);
+		
+		// If the board is solved then simply return out of this method.
+		if (!board.isSolved()) {
+			threadPool =(ThreadPoolExecutor) Executors
+				.newFixedThreadPool(Constants.NUM_THREADS);
+		} else {
 			return true;
 		}
 
@@ -90,7 +92,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		 * RecurssiveSudokuPuzzle(board); bruteForce.solve();
 		 */
 
-		return startBruteForceSolver(threadPool);
+		return runBruteForceSolver(threadPool);
 	}
 
 	/*
@@ -115,9 +117,19 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		return solve();
 	}
 
-	private boolean startBruteForceSolver(ThreadPoolExecutor threadPool)
+	/**
+	 * Starts the brute force solved.
+	 * 
+	 * @param threadPool
+	 * @return
+	 * @throws InterruptedException
+	 */
+	private boolean runBruteForceSolver(ThreadPoolExecutor threadPool)
 			throws InterruptedException {
+		// Initialize the counter that will monitor the number of threads created.
 		CountingSemaphore counter = new CountingSemaphore();
+		
+		// Create a new instance of the brute force solving class.
 		ParallelBruteForceSolver brute = new ParallelBruteForceSolver(board,
 				threadPool, counter, 0, 0);
 		brute.clearSolved();
@@ -130,7 +142,8 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		shutdown(threadPool);
 
 		// System.out.println("FINAL COUNTER VALUE: " + counter.getValue());
-
+		
+		// If the board is solved it will be stored in a static variable in the solver.
 		SudokuBoard tempBoard = brute.getSolvedBoard();
 		if (tempBoard != null) {
 			board = tempBoard;
