@@ -45,10 +45,10 @@ public class ParallelStrategySolver {
 	 * @return the possible values cell
 	 */
 	public int[] getPossibleValuesCell(int row, int col) {
-		int values[] = new int[board.getSize()];
+		int values[] = new int[Constants.BOARD_SIZE];
 		int counter = 0;
 		if (board.getValueAt(row, col) == Constants.EMPTY_CELL) {
-			for (int i = 0; i < board.getSize(); i++) {
+			for (int i = 0; i < Constants.BOARD_SIZE; i++) {
 				if (possibleValues[row][col][i]) {
 					values[counter++] = i + 1;
 				}
@@ -64,16 +64,16 @@ public class ParallelStrategySolver {
 	 * @return the value of least possible values cell
 	 */
 	public int getValueOfLeastPossibleValuesCell() {
-		int minValues = board.getSize() + 1;
+		int minValues = Constants.BOARD_SIZE + 1;
 		int cellValues;
 		int row = minValues;
 		int col = minValues;
 
-		for (int i = 0; i < board.getSize(); i++) {
-			for (int j = 0; j < board.getSize(); j++) {
+		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
 				if (board.getValueAt(i, j) == Constants.EMPTY_CELL) {
 					cellValues = 0;
-					for (int k = 0; k < board.getSize(); k++) {
+					for (int k = 0; k < Constants.BOARD_SIZE; k++) {
 						if (possibleValues[i][j][k]) {
 							cellValues++;
 						}
@@ -87,11 +87,11 @@ public class ParallelStrategySolver {
 			}
 		}
 
-		if (row != board.getSize() + 1 && col != board.getSize() + 1) {
+		if (row != Constants.BOARD_SIZE + 1 && col != Constants.BOARD_SIZE + 1) {
 			System.out.println("Found cell at: " + row + " , " + col);
-			return row + board.getSize() * col;
+			return row + Constants.BOARD_SIZE * col;
 		} else {
-			return (board.getSize() + 1) * (board.getSize() + 1);
+			return (Constants.BOARD_SIZE + 1) * (Constants.BOARD_SIZE + 1);
 		}
 	}
 
@@ -99,12 +99,12 @@ public class ParallelStrategySolver {
 	 * Initialize possible values.
 	 */
 	public void initializePossibleValues() {
-		possibleValues = new boolean[board.getSize()][board.getSize()][board.getSize()];
+		possibleValues = new boolean[Constants.BOARD_SIZE][Constants.BOARD_SIZE][Constants.BOARD_SIZE];
 
-		for (int i = 0; i < board.getSize(); i++) {
-			for (int j = 0; j < board.getSize(); j++) {
+		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
 				boolean value = board.getValueAt(i, j) == Constants.EMPTY_CELL;
-				for (int k = 0; k < board.getSize(); k++) {
+				for (int k = 0; k < Constants.BOARD_SIZE; k++) {
 					possibleValues[i][j][k] = value;
 				}
 			}
@@ -143,12 +143,12 @@ public class ParallelStrategySolver {
 	public void setupPossibleValues(CountingSemaphore counter,
 			ThreadPoolExecutor threadPool) {
 
-		for (int i = 0; i < board.getSize(); i++) {
-			for (int j = 0; j < board.getSize(); j++) {
+		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
 				if (board.getValueAt(i, j) != Constants.EMPTY_CELL) {
 					Strategy temp = new FindPossibleValuesStrategy(counter, i,
 							j, board, possibleValues);
-					startThread(temp, threadPool);
+					startThread(temp, threadPool, counter);
 				}
 			}
 		}
@@ -194,7 +194,7 @@ public class ParallelStrategySolver {
 	private void startColThread(CountingSemaphore counter, int col,
 			ThreadPoolExecutor threadPool) {
 		startThread(new OnePossibilityStrategy(counter, col, board,
-				possibleValues, false), threadPool);
+				possibleValues, false), threadPool, counter);
 	}
 
 	/**
@@ -205,7 +205,7 @@ public class ParallelStrategySolver {
 	 */
 	private void startRowAndColumnAndSquareThreads(CountingSemaphore counter,
 			ThreadPoolExecutor threadPool) {
-		for (int m = 0; m < board.getSize(); m++) {
+		for (int m = 0; m < Constants.BOARD_SIZE; m++) {
 			startRowThread(counter, m, threadPool);
 
 			startColThread(counter, m, threadPool);
@@ -225,7 +225,7 @@ public class ParallelStrategySolver {
 	private void startRowThread(CountingSemaphore counter, int row,
 			ThreadPoolExecutor threadPool) {
 		startThread(new OnePossibilityStrategy(counter, row, board,
-				possibleValues, true), threadPool);
+				possibleValues, true), threadPool, counter);
 	}
 
 	/**
@@ -237,15 +237,15 @@ public class ParallelStrategySolver {
 	private void startSingleValueForCellThreads(CountingSemaphore counter,
 			ThreadPoolExecutor threadPool) {
 		// Create the thread pool.
-		for (int m = 0; m < board.getSize(); m++) {
-			for (int n = 0; n < board.getSize(); n++) {
+		for (int m = 0; m < Constants.BOARD_SIZE; m++) {
+			for (int n = 0; n < Constants.BOARD_SIZE; n++) {
 				if (board.getValueAt(m, n) == Constants.EMPTY_CELL) {
 					try {
 						// new Thread(new SingleValueForCellStrategy(m, n,
 						// board, possibleValues)).start();
 						Strategy temp = new SingleValueForCellStrategy(counter,
 								m, n, board, possibleValues);
-						startThread(temp, threadPool);
+						startThread(temp, threadPool, counter);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -269,7 +269,7 @@ public class ParallelStrategySolver {
 	private void startSquareThread(CountingSemaphore counter, int square,
 			ThreadPoolExecutor threadPool) {
 		startThread(new OnePossibilitySquareStrategy(counter, square, board,
-				possibleValues), threadPool);
+				possibleValues), threadPool, counter);
 	}
 
 	/**
@@ -278,8 +278,8 @@ public class ParallelStrategySolver {
 	 * @param temp the temp
 	 * @param threadPool the thread pool
 	 */
-	private void startThread(Strategy temp, ThreadPoolExecutor threadPool) {
-		if (threadPool != null) {
+	private void startThread(Strategy temp, ThreadPoolExecutor threadPool, CountingSemaphore counter) {
+		if (threadPool != null && counter.getValue() < Constants.PROCS_PER_BRANCH) {
 			threadPool.execute(temp);
 		} else {
 			temp.run();

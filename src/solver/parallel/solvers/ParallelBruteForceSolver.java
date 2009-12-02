@@ -2,6 +2,7 @@ package solver.parallel.solvers;
 
 import gui.Constants;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import solver.Helper;
@@ -158,7 +159,9 @@ public class ParallelBruteForceSolver implements Runnable {
 		}
 
 		ParallelStrategySolver solver = new ParallelStrategySolver(board);
-		solver.solve(null);
+		threadPool =(ThreadPoolExecutor) Executors
+		.newFixedThreadPool(Constants.PROCS_PER_BRANCH);
+		solver.solve(threadPool);
 
 		if (board.isSolved() || boardSolved) {
 			setSolvedBoard(board);
@@ -201,16 +204,17 @@ public class ParallelBruteForceSolver implements Runnable {
 		SudokuBoard boardSave;
 		int tempStartRow;
 		int tempStartCol;
-		for (int j : solver.getPossibleValuesCell(startRow, startCol)) {
+		int values[] = solver.getPossibleValuesCell(startRow, startCol);
+		for (int j=0; j < values.length; j++) {
 		 //System.out.println("Setting (" + startRow + " , " + startCol +
 		 //") to " + j);
-			if (j == Constants.EMPTY_CELL || boardSolved) {
+			if (values[j] == Constants.EMPTY_CELL || boardSolved) {
 				break;
 			}
 
-			tempBoard = board.newChangedValue(startRow, startCol, j);
+			tempBoard = board.newChangedValue(startRow, startCol, values[j]);
 
-			if (!startThread(tempBoard)) {
+			if (!startThread(tempBoard, values[j+1] == Constants.EMPTY_CELL)) {
 				boardSave = board;
 				board = tempBoard;
 				tempStartRow = startRow;
@@ -235,9 +239,9 @@ public class ParallelBruteForceSolver implements Runnable {
 	 * 
 	 * @return true, if successful
 	 */
-	private synchronized boolean startThread(SudokuBoard tempBoard) {
+	private synchronized boolean startThread(SudokuBoard tempBoard, boolean attempt) {
 
-		if (counter.getValue() < Constants.NUM_THREADS) {
+		if (attempt && counter.getValue() < (Constants.NUM_BRANCHES)) {
 			ParallelBruteForceSolver bruteSolver;
 			bruteSolver = new ParallelBruteForceSolver(tempBoard, threadPool,
 					counter, startRow, startCol);
