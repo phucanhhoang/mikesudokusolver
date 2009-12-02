@@ -33,6 +33,7 @@ public class Testing {
 			puzzle.solve();
 
 			long time2 = System.currentTimeMillis();
+			totalRec += time2 - time1;
 			//printBoard(puzzle);
 			//System.out.println("Puzzle solved in : "+ (totalRec += time2 - time1));
 			//printBoard(parallelPuzzle);
@@ -42,6 +43,7 @@ public class Testing {
 
 			long time4 = System.currentTimeMillis();
 			//printBoard(parallelPuzzle);
+			totalPar += time4 - time3;
 			//System.out.println("Parallel Puzzle solved in : "+ (totalPar += time4 - time3));
 		}
 

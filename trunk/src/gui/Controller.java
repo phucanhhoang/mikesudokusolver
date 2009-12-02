@@ -3,6 +3,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import solver.SudokuBoard;
 import solver.SudokuPuzzle;
 import solver.parallel.ParallelSudokuPuzzle;
 import solver.recurssive.RecurssiveSudokuPuzzle;
@@ -23,8 +24,9 @@ public class Controller implements ActionListener {
 	 * Start a new gui and sudoku puzzle.
 	 */
 	public Controller() throws InterruptedException {
+		//SudokuBoard hardBoard = new SudokuBoard(this.hardBoard);
 		handler = new RecurssiveSudokuPuzzle();
-		//handler = new ParallelSudokuPuzzle(handler.getBoard());
+		handler = new ParallelSudokuPuzzle(handler.getBoard());
 		//handler = new ParallelSudokuPuzzle(hardBoard);
 		gui = new SudokuGui(handler.getBoard(), this);
 		

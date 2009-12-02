@@ -82,7 +82,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		// If the board is solved then simply return out of this method.
 		if (!board.isSolved()) {
 			threadPool =(ThreadPoolExecutor) Executors
-				.newFixedThreadPool(Constants.NUM_THREADS);
+				.newFixedThreadPool(Constants.NUM_BRANCHES);
 		} else {
 			return true;
 		}
