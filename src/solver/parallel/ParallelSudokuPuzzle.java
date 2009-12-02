@@ -132,7 +132,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 		// Create a new instance of the brute force solving class.
 		ParallelBruteForceSolver brute = new ParallelBruteForceSolver(board,
 				threadPool, counter, 0, 0);
-		brute.clearSolved();
+		ParallelBruteForceSolver.clearSolved();
 		brute.run();
 
 		// System.out.println("waiting for threads");

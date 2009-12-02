@@ -71,7 +71,7 @@ public class ParallelBruteForceSolver implements Runnable {
 	/**
 	 * Clear solved.
 	 */
-	public synchronized void clearSolved() {
+	public synchronized static void clearSolved() {
 		boardSolved = false;
 		solvedBoard = null;
 	}
@@ -158,7 +158,7 @@ public class ParallelBruteForceSolver implements Runnable {
 		}
 
 		ParallelStrategySolver solver = new ParallelStrategySolver(board);
-		solver.solve(threadPool);
+		solver.solve(null);
 
 		if (board.isSolved() || boardSolved) {
 			setSolvedBoard(board);
@@ -202,8 +202,8 @@ public class ParallelBruteForceSolver implements Runnable {
 		int tempStartRow;
 		int tempStartCol;
 		for (int j : solver.getPossibleValuesCell(startRow, startCol)) {
-			// System.out.println("Setting (" + startRow + " , " + startCol +
-			// ") to " + j);
+		 System.out.println("Setting (" + startRow + " , " + startCol +
+		 ") to " + j);
 			if (j == Constants.EMPTY_CELL || boardSolved) {
 				break;
 			}
