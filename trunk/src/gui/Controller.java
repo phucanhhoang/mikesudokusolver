@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import solver.SudokuBoard;
 import solver.SudokuPuzzle;
 import solver.parallel.ParallelSudokuPuzzle;
+import solver.parallelNoStrategies.ParallelNoStrategiesSudokuPuzzle;
 import solver.recurssive.RecurssiveSudokuPuzzle;
 
 public class Controller implements ActionListener {
@@ -26,7 +27,8 @@ public class Controller implements ActionListener {
 	public Controller() throws InterruptedException {
 		//SudokuBoard hardBoard = new SudokuBoard(this.hardBoard);
 		handler = new RecurssiveSudokuPuzzle();
-		handler = new ParallelSudokuPuzzle(handler.getBoard());
+		//handler = new ParallelSudokuPuzzle(handler.getBoard());
+		handler = new ParallelNoStrategiesSudokuPuzzle(handler.getBoard());
 		//handler = new ParallelSudokuPuzzle(hardBoard);
 		gui = new SudokuGui(handler.getBoard(), this);
 		

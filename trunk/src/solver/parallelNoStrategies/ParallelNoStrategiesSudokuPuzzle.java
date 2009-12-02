@@ -15,7 +15,7 @@ import solver.parallel.solvers.strategies.semaphore.CountingSemaphore;
 /**
  * The Class ParallelSudokuPuzzle.
  */
-public class ParallelSudokuPuzzle extends SudokuPuzzle {
+public class ParallelNoStrategiesSudokuPuzzle extends SudokuPuzzle {
 
 	/**
 	 * Instantiates a new parallel sudoku puzzle.
@@ -23,7 +23,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 	 * @throws InterruptedException
 	 *             the interrupted exception
 	 */
-	public ParallelSudokuPuzzle() throws InterruptedException {
+	public ParallelNoStrategiesSudokuPuzzle() throws InterruptedException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -37,7 +37,7 @@ public class ParallelSudokuPuzzle extends SudokuPuzzle {
 	 * @throws InterruptedException
 	 *             the interrupted exception
 	 */
-	public ParallelSudokuPuzzle(int[][] board) throws InterruptedException {
+	public ParallelNoStrategiesSudokuPuzzle(int[][] board) throws InterruptedException {
 		super(board);
 	}
 
