@@ -27,24 +27,22 @@ public class Testing {
 			parallelPuzzle = new ParallelSudokuPuzzle(Helper.copyCells(puzzle
 					.getBoard()));
 
-			printBoard(puzzle);
+			//printBoard(puzzle);
 			long time1 = System.currentTimeMillis();
 
 			puzzle.solve();
 
 			long time2 = System.currentTimeMillis();
-			printBoard(puzzle);
-			System.out.println("Puzzle solved in : "
-					+ (totalRec += time2 - time1));
-			printBoard(parallelPuzzle);
+			//printBoard(puzzle);
+			//System.out.println("Puzzle solved in : "+ (totalRec += time2 - time1));
+			//printBoard(parallelPuzzle);
 			long time3 = System.currentTimeMillis();
 
 			parallelPuzzle.solve();
 
 			long time4 = System.currentTimeMillis();
-			printBoard(parallelPuzzle);
-			System.out.println("Parallel Puzzle solved in : "
-					+ (totalPar += time4 - time3));
+			//printBoard(parallelPuzzle);
+			//System.out.println("Parallel Puzzle solved in : "+ (totalPar += time4 - time3));
 		}
 
 		System.out.println("Recursive Time: " + totalRec);

@@ -51,7 +51,7 @@ public class SingleValueForCellStrategy extends Strategy {
 	private int getOnePossibleValue() {
 		int possibleValue = 0;
 
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+		for (int i = 0; i < board.getSize(); i++) {
 			if (possibleValue != 0 && possibleValues[row][col][i] == true) {
 				possibleValue = 0;
 				break;

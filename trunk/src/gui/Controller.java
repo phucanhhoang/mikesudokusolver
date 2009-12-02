@@ -12,6 +12,7 @@ public class Controller implements ActionListener {
 	private int lastClickedi;
 	private int lastClickedj;
 	private SudokuPuzzle handler;
+	private int boardSize;
 	private final int[][] hardBoard = { { 1, 0, 0, 0, 0, 0, 0, 0, 2 },
 			{ 0, 9, 0, 4, 0, 0, 0, 5, 0 }, { 0, 0, 6, 0, 0, 0, 7, 0, 0 },
 			{ 0, 5, 0, 9, 0, 3, 0, 0, 0 }, { 0, 0, 0, 0, 7, 0, 0, 0, 0 },
@@ -22,15 +23,16 @@ public class Controller implements ActionListener {
 	 * Start a new gui and sudoku puzzle.
 	 */
 	public Controller() throws InterruptedException {
-		//handler = new RecurssiveSudokuPuzzle();
+		handler = new RecurssiveSudokuPuzzle();
 		//handler = new ParallelSudokuPuzzle(handler.getBoard());
-		handler = new ParallelSudokuPuzzle(hardBoard);
+		//handler = new ParallelSudokuPuzzle(hardBoard);
 		gui = new SudokuGui(handler.getBoard(), this);
-
+		
+		boardSize = handler.getBoard().length;
 		// Used to store dark gray cells.
 		//
-		lastClickedi = Constants.BOARD_SIZE;
-		lastClickedj = Constants.BOARD_SIZE;
+		lastClickedi = boardSize;
+		lastClickedj = boardSize;
 	}
 
 	/**
@@ -81,14 +83,14 @@ public class Controller implements ActionListener {
 			String str = gui.getValue();
 			try {
 				int num = Integer.parseInt(str);
-				if (num > 0 && num < Constants.BOARD_SIZE + 1) {
+				if (num > 0 && num < boardSize + 1) {
 					if (gui.setValueAt(lastClickedi, lastClickedj, num, handler
 							.isLegalMove(lastClickedi, lastClickedj, num))) {
 						handler.setBoardSpot(lastClickedi, lastClickedj, num);
 						gui.setValue("");
 						gui.cellClicked(false);
-						lastClickedi = Constants.BOARD_SIZE;
-						lastClickedj = Constants.BOARD_SIZE;
+						lastClickedi = boardSize;
+						lastClickedj = boardSize;
 					}
 				}
 			}
@@ -100,11 +102,11 @@ public class Controller implements ActionListener {
 
 		// Look through all cells for action event.
 		//
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+		for (int i = 0; i < boardSize; i++) {
+			for (int j = 0; j < boardSize; j++) {
 				if (gui.cellClickedAt(i, j, e)) {
-					if (lastClickedi < Constants.BOARD_SIZE
-							&& lastClickedj < Constants.BOARD_SIZE) {
+					if (lastClickedi < boardSize
+							&& lastClickedj < boardSize) {
 						gui.unSetCellClickedAt(lastClickedi, lastClickedj);
 					}
 
@@ -114,8 +116,8 @@ public class Controller implements ActionListener {
 						gui.setCellClickedAt(i, j);
 						gui.cellClicked(true);
 					} else {
-						lastClickedi = Constants.BOARD_SIZE;
-						lastClickedj = Constants.BOARD_SIZE;
+						lastClickedi = boardSize;
+						lastClickedj = boardSize;
 						gui.unSetCellClickedAt(i, j);
 						gui.cellClicked(false);
 					}
