@@ -22,9 +22,9 @@ public class Controller implements ActionListener {
 	 * Start a new gui and sudoku puzzle.
 	 */
 	public Controller() throws InterruptedException {
-		handler = new RecurssiveSudokuPuzzle();
-		handler = new ParallelSudokuPuzzle(handler.getBoard());
-		// handler = new ParallelSudokuPuzzle(hardBoard);
+		//handler = new RecurssiveSudokuPuzzle();
+		//handler = new ParallelSudokuPuzzle(handler.getBoard());
+		handler = new ParallelSudokuPuzzle(hardBoard);
 		gui = new SudokuGui(handler.getBoard(), this);
 
 		// Used to store dark gray cells.
