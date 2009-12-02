@@ -12,16 +12,16 @@ public class Board extends Panel {
 	public Board(int[][] initialArray, ActionListener listener) {
 		// Create grid of cells and initialize.
 		//
-		cells = new Cell[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
+		cells = new Cell[initialArray.length][initialArray.length];
 		setBackground(Constants.BOARD_BACKGROUND);
-		setLayout(new GridLayout(Constants.BOARD_SIZE, Constants.BOARD_SIZE, 5,
+		setLayout(new GridLayout(initialArray.length, initialArray.length, 5,
 				5));
-		this.setSize(Constants.CELL_SIZE * Constants.BOARD_SIZE,
-				Constants.CELL_SIZE * Constants.BOARD_SIZE);
+		this.setSize(Constants.CELL_SIZE * initialArray.length,
+				Constants.CELL_SIZE * initialArray.length);
 		this.listener = listener;
 
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+		for (int i = 0; i < initialArray.length; i++) {
+			for (int j = 0; j < initialArray.length; j++) {
 				cells[i][j] = new Cell(initialArray[i][j], listener);
 				this.add(cells[i][j]);
 			}
@@ -41,10 +41,10 @@ public class Board extends Panel {
 	public int[][] getArray() {
 		// Create new array instance and load values.
 		//
-		int[][] newCells = new int[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
+		int[][] newCells = new int[cells.length][cells.length];
 
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
 				newCells[i][j] = cells[i][j].getValue();
 			}
 		}
@@ -59,8 +59,8 @@ public class Board extends Panel {
 	public void setArray(int[][] newCells) {
 		// Loads values.
 		//
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
 				cells[i][j].setValue(newCells[i][j]);
 			}
 		}

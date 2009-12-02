@@ -8,7 +8,7 @@ import solver.parallel.solvers.strategies.Strategy;
 
 public class SudokuBoard {
 	public static boolean equalBoards(SudokuBoard board1, SudokuBoard board2) {
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+		for (int i = 0; i < board1.getSize(); i++) {
 			if (!Arrays.equals(board1.getBoard()[i], board2.getBoard()[i])) {
 				return false;
 			}
@@ -25,6 +25,10 @@ public class SudokuBoard {
 	public SudokuBoard(int[][] board2) {
 		board = board2;
 	}
+	
+	public int getSize() {
+		return board.length;
+	}
 
 	/**
 	 * @param row
@@ -34,7 +38,7 @@ public class SudokuBoard {
 	private boolean checkColLegalMove(int row, int col, int val) {
 		// Check column to see if move cannot be made.
 		//
-		for (int k = 0; k < Constants.BOARD_SIZE; k++) {
+		for (int k = 0; k < getSize(); k++) {
 			if (val == board[row][k] && col != k) {
 				return false;
 			}
@@ -51,7 +55,7 @@ public class SudokuBoard {
 	private boolean checkRowLegalMove(int row, int col, int val) {
 		// Check row to see if move cannot be made.
 		//
-		for (int k = 0; k < Constants.BOARD_SIZE; k++) {
+		for (int k = 0; k < getSize(); k++) {
 			if (val == board[k][col] && row != k) {
 				return false;
 			}
@@ -67,13 +71,13 @@ public class SudokuBoard {
 	private boolean checkSquareLegalMove(int row, int col, int val) {
 		// Set beginning of square this cell is in.
 		//
-		int rowOffset = Strategy.getOffset(row);
-		int colOffset = Strategy.getOffset(col);
+		int rowOffset = Strategy.getOffset(row, getSize());
+		int colOffset = Strategy.getOffset(col, getSize());
 
 		// Check square for repeated number.
 		//
-		for (int k = 0; k < Math.sqrt(Constants.BOARD_SIZE); k++) {
-			for (int m = 0; m < Math.sqrt(Constants.BOARD_SIZE); m++) {
+		for (int k = 0; k < Math.sqrt(getSize()); k++) {
+			for (int m = 0; m < Math.sqrt(getSize()); m++) {
 				if (val == board[k + rowOffset][m + colOffset]
 						&& k + rowOffset != row && m + colOffset != col) {
 					return false;
@@ -116,8 +120,8 @@ public class SudokuBoard {
 	 * @return true, if checks if is solved
 	 */
 	public boolean isSolved() {
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+		for (int i = 0; i < getSize(); i++) {
+			for (int j = 0; j < getSize(); j++) {
 				if (board[i][j] == Constants.EMPTY_CELL
 						|| !legalMove(i, j, board[i][j])) {
 					return false;

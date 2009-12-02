@@ -98,10 +98,10 @@ public class ParallelBruteForceSolver implements Runnable {
 		int col = startCol;
 
 		while (board.getValueAt(row, col) != Constants.EMPTY_CELL) {
-			if (row == Constants.BOARD_SIZE - 1) {
+			if (row == board.getSize() - 1) {
 				row = 0;
 
-				if (++col == Constants.BOARD_SIZE) {
+				if (++col == board.getSize()) {
 					return false;
 				}
 			} else {
@@ -202,8 +202,8 @@ public class ParallelBruteForceSolver implements Runnable {
 		int tempStartRow;
 		int tempStartCol;
 		for (int j : solver.getPossibleValuesCell(startRow, startCol)) {
-		 System.out.println("Setting (" + startRow + " , " + startCol +
-		 ") to " + j);
+		 //System.out.println("Setting (" + startRow + " , " + startCol +
+		 //") to " + j);
 			if (j == Constants.EMPTY_CELL || boardSolved) {
 				break;
 			}

@@ -62,9 +62,9 @@ public abstract class SudokuPuzzle {
 	 *             the interrupted exception
 	 */
 	public void generateBoard() throws InterruptedException {
-		initializeBoard();
+		initializeBoard(Constants.BOARD_SIZE);
 
-		removeSquares(Constants.GEN_ATTEMPTS);
+		removeSquares(Constants.GEN_ATTEMPTS,Constants.BOARD_SIZE);
 	}
 
 	/**
@@ -90,10 +90,10 @@ public abstract class SudokuPuzzle {
 	 * 
 	 * @throws InterruptedException
 	 */
-	private void initializeBoard() throws InterruptedException {
-		board = new SudokuBoard(Constants.BOARD_SIZE);
+	private void initializeBoard(int size) throws InterruptedException {
+		board = new SudokuBoard(size);
 
-		if (solveBackwards()) {
+		if (solveRandom()) {
 			System.out.println("board generated");
 		}
 	}
@@ -108,7 +108,7 @@ public abstract class SudokuPuzzle {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	private void removeSquares(int missAttempts) throws InterruptedException {
+	private void removeSquares(int missAttempts, int size) throws InterruptedException {
 		int lastX;
 		int lastY;
 		int lastVal;
@@ -116,8 +116,8 @@ public abstract class SudokuPuzzle {
 		// Randomly remove squares until non-unique solution is found.
 		//
 		do {
-			lastX = gen.nextInt(Constants.BOARD_SIZE);
-			lastY = gen.nextInt(Constants.BOARD_SIZE);
+			lastX = gen.nextInt(size);
+			lastY = gen.nextInt(size);
 			lastVal = board.getValueAt(lastX, lastY);
 
 			board.setValueAt(lastX, lastY, Constants.EMPTY_CELL);

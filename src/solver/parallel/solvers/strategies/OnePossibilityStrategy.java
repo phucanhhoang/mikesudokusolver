@@ -49,9 +49,9 @@ public class OnePossibilityStrategy extends Strategy {
 	 * Counts number of positions each value can put in this row or col
 	 */
 	private void countPossibleSpots() {
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+		for (int i = 0; i < board.getSize(); i++) {
 			if (readBoard(trueForRow ? spot : i, trueForRow ? i : spot) == Constants.EMPTY_CELL) {
-				for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+				for (int j = 0; j < board.getSize(); j++) {
 					if (possibleValues[trueForRow ? spot : i][trueForRow ? i
 							: spot][j]) {
 						possibleSpots[j]++;
@@ -79,8 +79,8 @@ public class OnePossibilityStrategy extends Strategy {
 	 * Setup possible spots.
 	 */
 	public void setupPossibleSpots() {
-		possibleSpots = new int[Constants.BOARD_SIZE];
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+		possibleSpots = new int[board.getSize()];
+		for (int i = 0; i < board.getSize(); i++) {
 			possibleSpots[i] = 0;
 		}
 	}
@@ -89,9 +89,9 @@ public class OnePossibilityStrategy extends Strategy {
 	 * 
 	 */
 	private void updatePossibleSpots() {
-		for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+		for (int j = 0; j < board.getSize(); j++) {
 			if (possibleSpots[j] == 1) {
-				for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+				for (int i = 0; i < board.getSize(); i++) {
 					if (possibleValues[trueForRow ? spot : i][trueForRow ? i
 							: spot][j]) {
 						updateValue(trueForRow ? spot : i, trueForRow ? i

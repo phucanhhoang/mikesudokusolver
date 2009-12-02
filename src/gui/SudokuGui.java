@@ -42,15 +42,15 @@ public class SudokuGui extends Frame {
 
 		gameBoard = new Board(values, listener);
 
-		initialize();
+		initialize(values.length);
 
 		validate();
 	}
 
 	public void boardSolved(SudokuPuzzle puzzle) {
 		int[][] board = puzzle.getBoard();
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
-			for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
 				gameBoard.setValueAt(i, j, board[i][j], puzzle.isLegalMove(i,
 						j, board[i][j]));
 				// gameBoard.lockCellAt(i,j);
@@ -84,12 +84,12 @@ public class SudokuGui extends Frame {
 		return value.getText();
 	}
 
-	private void initialize() {
+	private void initialize(int size) {
 		// Set some settings for this frame.
 		//
 		setBackground(Constants.FRAME_BACKGROUND);
-		this.setSize(Constants.BOARD_SIZE * Constants.CELL_SIZE
-				+ Constants.BUTTON_SIZE, Constants.BOARD_SIZE
+		this.setSize(size * Constants.CELL_SIZE
+				+ Constants.BUTTON_SIZE, size
 				* Constants.CELL_SIZE);
 		setLayout(new BorderLayout());
 		setResizable(false);
@@ -126,7 +126,7 @@ public class SudokuGui extends Frame {
 		// Initialize panel that will hold buttons.
 		//
 		buttonPanel = new Panel();
-		buttonPanel.setSize(Constants.BUTTON_SIZE, Constants.BOARD_SIZE
+		buttonPanel.setSize(Constants.BUTTON_SIZE, size
 				* Constants.CELL_SIZE);
 		buttonPanel.setLayout(new GridLayout(9, 1));
 

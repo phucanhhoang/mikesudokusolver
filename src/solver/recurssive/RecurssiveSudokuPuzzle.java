@@ -40,10 +40,10 @@ public class RecurssiveSudokuPuzzle extends SudokuPuzzle {
 	public boolean solve(int i, int j, ArrayGeneratorStrategy strategy) {
 		// Check if the solver has run out of squares to figure out.
 		//
-		if (i == Constants.BOARD_SIZE) {
+		if (i == board.getSize()) {
 			i = 0;
 
-			if (++j == Constants.BOARD_SIZE) {
+			if (++j == board.getSize()) {
 				return true;
 			}
 		}
@@ -56,7 +56,7 @@ public class RecurssiveSudokuPuzzle extends SudokuPuzzle {
 
 		// Check all possible values in cell.
 		//
-		for (int val : strategy.generateArray(Constants.BOARD_SIZE)) {
+		for (int val : strategy.generateArray(board.getSize())) {
 			if (board.legalMove(i, j, val)) {
 				board.setValueAt(i, j, val);
 				if (solve(i + 1, j, strategy)) {

@@ -13,10 +13,10 @@ public abstract class Strategy implements Runnable {
 	/** The changed. */
 	protected static boolean changed = false;
 
-	public static int getOffset(int Val) {
-		return Math.round(Val
-				/ (int) Math.round(Math.sqrt(Constants.BOARD_SIZE))
-				* Math.round(Math.sqrt(Constants.BOARD_SIZE)));
+	public static int getOffset(int val, int size) {
+		return Math.round(val
+				/ (int) Math.round(Math.sqrt(size))
+				* Math.round(Math.sqrt(size)));
 	}
 
 	/**
@@ -31,7 +31,7 @@ public abstract class Strategy implements Runnable {
 	}
 
 	/** The board. */
-	private SudokuBoard board;
+	protected SudokuBoard board;
 
 	/** The possible values. */
 	protected boolean[][][] possibleValues;
@@ -127,7 +127,7 @@ public abstract class Strategy implements Runnable {
 	}
 
 	private void updateCellPossibleValues(int row, int col) {
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+		for (int i = 0; i < board.getSize(); i++) {
 			updatePossibleValue(row, col, i);
 		}
 	}
@@ -141,7 +141,7 @@ public abstract class Strategy implements Runnable {
 	 *            the val
 	 */
 	private void updateColPossibleValues(int col, int val) {
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+		for (int i = 0; i < board.getSize(); i++) {
 			if (possibleValues[i][col][val]) {
 				updatePossibleValue(i, col, val);
 			}
@@ -188,7 +188,7 @@ public abstract class Strategy implements Runnable {
 	 *            the val
 	 */
 	private void updateRowPossibleValues(int row, int val) {
-		for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+		for (int i = 0; i < board.getSize(); i++) {
 			if (possibleValues[row][i][val]) {
 				updatePossibleValue(row, i, val);
 			}
@@ -209,13 +209,13 @@ public abstract class Strategy implements Runnable {
 
 		// Set beginning of square this cell is in.
 		//
-		int rowOffset = getOffset(row);
-		int colOffset = getOffset(col);
+		int rowOffset = getOffset(row, board.getSize());
+		int colOffset = getOffset(col, board.getSize());
 
 		// Check square for repeated number.
 		//
-		for (int k = 0; k < Math.sqrt(Constants.BOARD_SIZE); k++) {
-			for (int m = 0; m < Math.sqrt(Constants.BOARD_SIZE); m++) {
+		for (int k = 0; k < Math.sqrt(board.getSize()); k++) {
+			for (int m = 0; m < Math.sqrt(board.getSize()); m++) {
 				if (possibleValues[k + rowOffset][m + colOffset][val]) {
 					updatePossibleValue(k + rowOffset, m + colOffset, val);
 				}
