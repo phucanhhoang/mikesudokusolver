@@ -152,14 +152,9 @@ public class ParallelBruteForceNoStrategiesSolver implements Runnable {
 		if (ParallelBruteForceNoStrategiesSolver.boardSolved) {
 			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 			return;
-		} else if (board.isSolved()) {
-			setSolvedBoard(board);
-			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
-			return;
-		}
-
-		threadPool =(ThreadPoolExecutor) Executors
-		.newFixedThreadPool(Constants.PROCS_PER_BRANCH);
+		} 
+		/*threadPool =(ThreadPoolExecutor) Executors
+		.newFixedThreadPool(Constants.PROCS_PER_BRANCH);*/
 
 		if (board.isSolved() || boardSolved) {
 			setSolvedBoard(board);
@@ -170,7 +165,7 @@ public class ParallelBruteForceNoStrategiesSolver implements Runnable {
 			return;
 		}
 
-		startBruteForceSolver(threadPool);
+		startBruteForceSolver(null);
 		decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 	}
 
@@ -239,8 +234,10 @@ public class ParallelBruteForceNoStrategiesSolver implements Runnable {
 			ParallelBruteForceNoStrategiesSolver bruteSolver;
 			bruteSolver = new ParallelBruteForceNoStrategiesSolver(tempBoard, threadPool,
 					counter, startRow, startCol);
-			// new Thread(bruteSolver).start();
-			threadPool.execute(bruteSolver);
+			if (threadPool != null)
+				threadPool.execute(bruteSolver);
+			else
+				new Thread(bruteSolver).start();
 			// bruteSolver.run();
 			return true;
 		}

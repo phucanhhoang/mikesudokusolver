@@ -279,10 +279,11 @@ public class ParallelStrategySolver {
 	 * @param threadPool the thread pool
 	 */
 	private void startThread(Strategy temp, ThreadPoolExecutor threadPool, CountingSemaphore counter) {
-		if (threadPool != null && counter.getValue() < Constants.PROCS_PER_BRANCH) {
+		if (threadPool != null && counter.getValue() < Constants.NUM_BRANCHES) {
 			threadPool.execute(temp);
-		} else {
+		} else if (counter.getValue() < Constants.NUM_BRANCHES){
+			new Thread(temp).start();
+		} else
 			temp.run();
-		}
 	}
 }
