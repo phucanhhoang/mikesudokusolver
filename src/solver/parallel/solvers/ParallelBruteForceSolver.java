@@ -152,16 +152,16 @@ public class ParallelBruteForceSolver implements Runnable {
 		if (ParallelBruteForceSolver.boardSolved) {
 			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 			return;
-		} else if (board.isSolved()) {
+		} /*else if (board.isSolved()) {
 			setSolvedBoard(board);
 			decrementCounterIfFirstLayerOfRun(firstLayerOfRun);
 			return;
-		}
+		}*/
 
 		ParallelStrategySolver solver = new ParallelStrategySolver(board);
-		threadPool =(ThreadPoolExecutor) Executors
-		.newFixedThreadPool(Constants.PROCS_PER_BRANCH);
-		solver.solve(threadPool);
+		/*threadPool =(ThreadPoolExecutor) Executors
+		.newFixedThreadPool(Constants.PROCS_PER_BRANCH);*/
+		solver.solve(null);
 
 		if (board.isSolved() || boardSolved) {
 			setSolvedBoard(board);
@@ -242,6 +242,7 @@ public class ParallelBruteForceSolver implements Runnable {
 	private synchronized boolean startThread(SudokuBoard tempBoard, boolean attempt) {
 
 		if (attempt && counter.getValue() < (Constants.NUM_BRANCHES)) {
+			//System.out.println("Starting thread");
 			ParallelBruteForceSolver bruteSolver;
 			bruteSolver = new ParallelBruteForceSolver(tempBoard, threadPool,
 					counter, startRow, startCol);

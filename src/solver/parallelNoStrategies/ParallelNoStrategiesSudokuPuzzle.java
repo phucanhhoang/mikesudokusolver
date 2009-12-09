@@ -10,6 +10,7 @@ import solver.SudokuBoard;
 import solver.SudokuPuzzle;
 import solver.parallel.solvers.ParallelBruteForceSolver;
 import solver.parallel.solvers.strategies.semaphore.CountingSemaphore;
+import solver.parallelNoStrategies.solvers.ParallelBruteForceNoStrategiesSolver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -130,9 +131,9 @@ public class ParallelNoStrategiesSudokuPuzzle extends SudokuPuzzle {
 		CountingSemaphore counter = new CountingSemaphore();
 		
 		// Create a new instance of the brute force solving class.
-		ParallelBruteForceSolver brute = new ParallelBruteForceSolver(board,
+		ParallelBruteForceNoStrategiesSolver brute = new ParallelBruteForceNoStrategiesSolver(board,
 				threadPool, counter, 0, 0);
-		ParallelBruteForceSolver.clearSolved();
+		ParallelBruteForceNoStrategiesSolver.clearSolved();
 		brute.run();
 
 		// System.out.println("waiting for threads");
